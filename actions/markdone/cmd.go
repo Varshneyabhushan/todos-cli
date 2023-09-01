@@ -2,6 +2,7 @@ package markdone
 
 import (
 	"errors"
+	"fmt"
 	"strconv"
 
 	"github.com/spf13/cobra"
@@ -22,6 +23,7 @@ func NewCommand(s MarkDoneService) *cobra.Command {
 				return errors.New("error while marking an item done : " + err.Error())
 			}
 
+			fmt.Println("task marked as complete!")
 			return nil
 		},
 	}

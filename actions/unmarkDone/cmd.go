@@ -2,6 +2,7 @@ package unmarkdone
 
 import (
 	"errors"
+	"fmt"
 	"strconv"
 
 	"github.com/spf13/cobra"
@@ -22,6 +23,7 @@ func NewCommand(s MarkUndoneService) *cobra.Command {
 				return errors.New("error while unmarking an item done : " + err.Error())
 			}
 
+			fmt.Println("task marked as pending..")
 			return nil
 		},
 	}
