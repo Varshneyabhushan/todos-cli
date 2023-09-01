@@ -2,6 +2,7 @@ package add
 
 import (
 	"errors"
+	"fmt"
 	"strings"
 
 	"github.com/spf13/cobra"
@@ -23,6 +24,7 @@ func MakeCommand(add AddingService) *cobra.Command {
 				return errors.New("error while adding a todo : " + err.Error())
 			}
 
+			fmt.Println("task added successfully!")
 			return nil
 		},
 	}
