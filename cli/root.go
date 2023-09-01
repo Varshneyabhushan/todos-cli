@@ -3,6 +3,8 @@ package cli
 import (
 	"todos/actions/add"
 	"todos/actions/list"
+	"todos/actions/markdone"
+	unmarkdone "todos/actions/unmarkDone"
 	"todos/services"
 
 	"github.com/spf13/cobra"
@@ -22,5 +24,8 @@ func Start(todoService services.TodoService) error {
 
 	rootCmd.AddCommand(add.MakeCommand(add.NewAddingService(&todoService)))
 	rootCmd.AddCommand(list.MakeCommand(list.NewListService(&todoService)))
+	rootCmd.AddCommand(markdone.NewCommand(markdone.NewMarkDoneService(&todoService)))
+	rootCmd.AddCommand(unmarkdone.NewCommand(unmarkdone.NewMarkUndoneService(&todoService)))
+	
 	return rootCmd.Execute()
 }
