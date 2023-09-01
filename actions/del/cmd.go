@@ -2,6 +2,7 @@ package del
 
 import (
 	"errors"
+	"fmt"
 	"strconv"
 
 	"github.com/spf13/cobra"
@@ -22,6 +23,7 @@ func NewCommand(s DeleteService) *cobra.Command {
 				return errors.New("error while marking an item done : " + err.Error())
 			}
 
+			fmt.Println("task deleted!")
 			return nil
 		},
 	}
