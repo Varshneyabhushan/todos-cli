@@ -20,6 +20,11 @@ func MakeCommand(s ListService) *cobra.Command {
 				return errors.New("error while getting list : " + err.Error())
 			}
 
+			if len(items) == 0 {
+				fmt.Println("the list is empty!")
+				return nil
+			}
+
 			for _, item := range items {
 				status := " "
 				if item.IsDone {
