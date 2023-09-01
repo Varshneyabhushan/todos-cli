@@ -21,7 +21,7 @@ func MakeCommand(s ListService) *cobra.Command {
 			}
 
 			for _, item := range items {
-				status := "o"
+				status := " "
 				if item.IsDone {
 					status = "x"
 				}
