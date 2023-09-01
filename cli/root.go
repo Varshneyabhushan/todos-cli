@@ -2,6 +2,7 @@ package cli
 
 import (
 	"todos/actions/add"
+	"todos/actions/del"
 	"todos/actions/list"
 	"todos/actions/markdone"
 	unmarkdone "todos/actions/unmarkDone"
@@ -26,6 +27,7 @@ func Start(todoService services.TodoService) error {
 	rootCmd.AddCommand(list.MakeCommand(list.NewListService(&todoService)))
 	rootCmd.AddCommand(markdone.NewCommand(markdone.NewMarkDoneService(&todoService)))
 	rootCmd.AddCommand(unmarkdone.NewCommand(unmarkdone.NewMarkUndoneService(&todoService)))
-	
+	rootCmd.AddCommand(del.NewCommand(del.NewDeleteService(&todoService)))
+
 	return rootCmd.Execute()
 }
