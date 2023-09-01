@@ -60,13 +60,13 @@ func (s *TodoService) List() ([]TodoItem, error) {
 	return result, nil
 }
 
-func (s *TodoService) Has(id int) bool {
+func (s *TodoService) has(id int) bool {
 	_, found := s.Todos[id]
 	return found
 }
 
 func (s *TodoService) Delete(id int) error {
-	if !s.Has(id) {
+	if !s.has(id) {
 		return errors.New("todo not found")
 	}
 
@@ -75,7 +75,7 @@ func (s *TodoService) Delete(id int) error {
 }
 
 func (s *TodoService) MarkDone(id int) error {
-	if !s.Has(id) {
+	if !s.has(id) {
 		return errors.New("todo not found")
 	}
 
@@ -86,7 +86,7 @@ func (s *TodoService) MarkDone(id int) error {
 }
 
 func (s *TodoService) MarkUndone(id int) error {
-	if !s.Has(id) {
+	if !s.has(id) {
 		return errors.New("todo not found")
 	}
 
