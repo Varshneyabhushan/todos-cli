@@ -3,12 +3,13 @@ package markdone
 import (
 	"errors"
 	"fmt"
+	"io"
 	"strconv"
 
 	"github.com/spf13/cobra"
 )
 
-func NewCommand(s MarkDoneService) *cobra.Command {
+func NewCommand(s MarkDoneService, w io.Writer) *cobra.Command {
 	return &cobra.Command{
 		Use:   "mark",
 		Short: "mark a todo as done",
@@ -23,7 +24,7 @@ func NewCommand(s MarkDoneService) *cobra.Command {
 				return errors.New("error while marking an item done : " + err.Error())
 			}
 
-			fmt.Println("task marked as complete!")
+			fmt.Fprintln(w, "task marked as complete!")
 			return nil
 		},
 	}

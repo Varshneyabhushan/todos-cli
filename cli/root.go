@@ -1,6 +1,7 @@
 package cli
 
 import (
+	"os"
 	"todos/actions/add"
 	"todos/actions/del"
 	"todos/actions/list"
@@ -23,11 +24,11 @@ func Start(todoService services.TodoService) error {
 
 	rootCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
 
-	rootCmd.AddCommand(add.MakeCommand(add.NewAddingService(&todoService)))
-	rootCmd.AddCommand(list.MakeCommand(list.NewListService(&todoService)))
-	rootCmd.AddCommand(markdone.NewCommand(markdone.NewMarkDoneService(&todoService)))
-	rootCmd.AddCommand(unmarkdone.NewCommand(unmarkdone.NewunmarkDoneService(&todoService)))
-	rootCmd.AddCommand(del.NewCommand(del.NewDeleteService(&todoService)))
+	rootCmd.AddCommand(add.MakeCommand(add.NewAddingService(&todoService), os.Stdout))
+	rootCmd.AddCommand(list.MakeCommand(list.NewListService(&todoService), os.Stdout))
+	rootCmd.AddCommand(markdone.NewCommand(markdone.NewMarkDoneService(&todoService), os.Stdout))
+	rootCmd.AddCommand(unmarkdone.NewCommand(unmarkdone.NewunmarkDoneService(&todoService), os.Stdout))
+	rootCmd.AddCommand(del.NewCommand(del.NewDeleteService(&todoService), os.Stdout))
 
 	return rootCmd.Execute()
 }

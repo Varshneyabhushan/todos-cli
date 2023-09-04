@@ -3,12 +3,13 @@ package unmarkdone
 import (
 	"errors"
 	"fmt"
+	"io"
 	"strconv"
 
 	"github.com/spf13/cobra"
 )
 
-func NewCommand(s MarkUndoneService) *cobra.Command {
+func NewCommand(s MarkUndoneService, w io.Writer) *cobra.Command {
 	return &cobra.Command{
 		Use:   "unmark",
 		Short: "unmark a done todo",
@@ -23,7 +24,7 @@ func NewCommand(s MarkUndoneService) *cobra.Command {
 				return errors.New("error while unmarking an item done : " + err.Error())
 			}
 
-			fmt.Println("task marked as pending..")
+			fmt.Fprintln(w, "task marked as pending..")
 			return nil
 		},
 	}
