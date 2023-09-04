@@ -8,13 +8,15 @@ import (
 )
 
 func MakeCommand(s ListService) *cobra.Command {
-	return &cobra.Command{
+	cmd := &cobra.Command{
 		Use: "list",
 		Short: "list the current todos",
 		Long: `list the total todos those are added. 
 		Even the todos those are marked done are shown here. 
 		To skip them, simply delete them`,
 		RunE: func(cmd *cobra.Command, args []string) error {
+			showPending, _ := cmd.Flags().GetBool("pending")
+
 			items, err := s()
 			if err != nil {
 				return errors.New("error while getting list : " + err.Error())
@@ -26,6 +28,10 @@ func MakeCommand(s ListService) *cobra.Command {
 			}
 
 			for index, item := range items {
+				if showPending && item.IsDone {
+					continue
+				}
+				
 				status := " "
 				if item.IsDone {
 					status = "x"
@@ -37,4 +43,7 @@ func MakeCommand(s ListService) *cobra.Command {
 			return nil
 		},
 	}
+
+	cmd.Flags().BoolP("pending", "p", false, "Show only pending todos")
+	return cmd
 }
