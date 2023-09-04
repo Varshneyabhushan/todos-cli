@@ -85,7 +85,7 @@ func (s *TodoService) MarkDone(id int) error {
 	return s.save()
 }
 
-func (s *TodoService) MarkUndone(id int) error {
+func (s *TodoService) UnmarkDone(id int) error {
 	if !s.has(id) {
 		return errors.New("todo not found")
 	}
