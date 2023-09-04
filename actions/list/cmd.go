@@ -4,9 +4,31 @@ import (
 	"errors"
 	"fmt"
 	"io"
+	"todos/services"
 
 	"github.com/spf13/cobra"
 )
+
+type itemFilter struct {
+	onlyPending bool
+}
+
+func shouldShow(item services.TodoItem, filter itemFilter) bool {
+	if filter.onlyPending && item.IsDone {
+		return false
+	}
+
+	return true
+}
+
+func itemToText(item services.TodoItem, index int) string {
+	status := " "
+	if item.IsDone {
+		status = "x"
+	}
+
+	return fmt.Sprintf("%d [%s] %s", index, status, item.Text)
+}
 
 func MakeCommand(s ListService, w io.Writer) *cobra.Command {
 	cmd := &cobra.Command{
@@ -16,7 +38,11 @@ func MakeCommand(s ListService, w io.Writer) *cobra.Command {
 		Even the todos those are marked done are shown here. 
 		To skip them, simply delete them`,
 		RunE: func(cmd *cobra.Command, args []string) error {
-			showPending, _ := cmd.Flags().GetBool("pending")
+			onlyPending, _ := cmd.Flags().GetBool("pending")
+
+			filter := itemFilter {
+				onlyPending: onlyPending,
+			}
 
 			items, err := s()
 			if err != nil {
@@ -29,16 +55,9 @@ func MakeCommand(s ListService, w io.Writer) *cobra.Command {
 			}
 
 			for index, item := range items {
-				if showPending && item.IsDone {
-					continue
+				if shouldShow(item, filter) {
+					fmt.Fprintln(w, itemToText(item, index))
 				}
-
-				status := " "
-				if item.IsDone {
-					status = "x"
-				}
-
-				fmt.Fprintln(w, fmt.Sprintf("%d [%s] %s", index, status, item.Text))
 			}
 
 			return nil
