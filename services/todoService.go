@@ -2,7 +2,6 @@ package services
 
 import (
 	"errors"
-	"sort"
 )
 
 type TodoItem struct {
@@ -14,14 +13,14 @@ type TodoItem struct {
 type TodoService struct {
 	CurrentId int
 	storage JSONStorage
-	Todos map[int]TodoItem
+	Todos []TodoItem
 }
 
 func NewTodoService(storage JSONStorage) (TodoService, error) {
 	newService := TodoService{
 		CurrentId: 0,
 		storage: storage,
-		Todos: make(map[int]TodoItem, 0),
+		Todos: make([]TodoItem, 0),
 	}
 
 	if err := storage.LoadJSON(&newService); err != nil {
@@ -43,55 +42,41 @@ func (s *TodoService) Add(text string) error {
 	}
 
 	s.CurrentId += 1
-	s.Todos[newTodo.Id] = newTodo
+	s.Todos = append(s.Todos, newTodo)
 	return s.save()
 }
 
 func (s *TodoService) List() ([]TodoItem, error) {
-	var result []TodoItem
-	for _, todoItem := range s.Todos {
-		result = append(result, todoItem)
-	}
-
-	sort.SliceStable(result, func(i, j int) bool {
-		return result[i].Id < result[j].Id
-	})
-	
-	return result, nil
+	return s.Todos, nil
 }
 
-func (s *TodoService) has(id int) bool {
-	_, found := s.Todos[id]
-	return found
+func (s *TodoService) has(index int) bool {
+	return 0 <= index && index < len(s.Todos)
 }
 
-func (s *TodoService) Delete(id int) error {
-	if !s.has(id) {
+func (s *TodoService) Delete(index int) error {
+	if !s.has(index) {
 		return errors.New("todo not found")
 	}
 
-	delete(s.Todos, id)
+	s.Todos = append(s.Todos[:index], s.Todos[index + 1:]...)
 	return s.save()
 }
 
-func (s *TodoService) MarkDone(id int) error {
-	if !s.has(id) {
+func (s *TodoService) MarkDone(index int) error {
+	if !s.has(index) {
 		return errors.New("todo not found")
 	}
 
-	todo, _ := s.Todos[id]
-	todo.IsDone = true
-	s.Todos[id] = todo
+	s.Todos[index].IsDone = true
 	return s.save()
 }
 
-func (s *TodoService) UnmarkDone(id int) error {
-	if !s.has(id) {
+func (s *TodoService) UnmarkDone(index int) error {
+	if !s.has(index) {
 		return errors.New("todo not found")
 	}
 
-	todo, _ := s.Todos[id]
-	todo.IsDone = false
-	s.Todos[id] = todo
+	s.Todos[index].IsDone = false
 	return s.save()
 }

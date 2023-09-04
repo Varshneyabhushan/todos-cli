@@ -25,13 +25,13 @@ func MakeCommand(s ListService) *cobra.Command {
 				return nil
 			}
 
-			for _, item := range items {
+			for index, item := range items {
 				status := " "
 				if item.IsDone {
 					status = "x"
 				}
 
-				fmt.Println(fmt.Sprintf("%d [%s] %s", item.Id, status, item.Text))
+				fmt.Println(fmt.Sprintf("%d [%s] %s", index, status, item.Text))
 			}
 
 			return nil

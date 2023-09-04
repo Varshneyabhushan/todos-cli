@@ -14,12 +14,12 @@ func NewCommand(s MarkUndoneService) *cobra.Command {
 		Short: "unmark a done todo",
 		Long:  `When a todo item is already complete, mark it as undone`,
 		RunE: func(cmd *cobra.Command, args []string) error {
-			id, err := strconv.Atoi(args[0])
+			index, err := strconv.Atoi(args[0])
 			if err != nil {
-				return errors.New("error while converting id to integer : " + err.Error())
+				return errors.New("error while converting index to integer : " + err.Error())
 			}
 
-			if err = s(id); err != nil {
+			if err = s(index); err != nil {
 				return errors.New("error while unmarking an item done : " + err.Error())
 			}
 
